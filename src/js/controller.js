@@ -8,7 +8,7 @@ export default class Controller {
 
 	constructor() {
 		this.animAmt = 0;
-		this.period = 5;
+		this.period = 100;
 
 		this.numShapes = 20;
 
@@ -50,15 +50,21 @@ export default class Controller {
 			context.strokeStyle = 'white';
 			// this.renderPath(context, path);
 
-			const pt = this.sampleFftData(fftData, this.animAmt);
+			const startPoint = this.sampleFftData(fftData, 0);
+			const startGrad = this.sampleFftDataGradient(fftData, 0);
+
+			const point = this.sampleFftData(fftData, this.animAmt);
 			const grad = this.sampleFftDataGradient(fftData, this.animAmt);
 			const angle = Math.atan2(grad.y, grad.x);
 
-			context.save
-	
 			const triRadius = 5;
-			context.translate(pt.x, pt.y);
+
+			context.translate(-startPoint.x, -startPoint.y);
+			context.translate(point.x, point.y);
+
+			context.rotate(-Math.atan2(startGrad.y, startGrad.x));
 			context.rotate(angle);
+
 			context.beginPath();
 			context.fillStyle = 'white';
 			context.moveTo(
