@@ -8,14 +8,14 @@ export default class Controller {
 
 	constructor() {
 		this.animAmt = 0;
-		this.period = 10;
+		this.period = 5;
 
 		this.numShapes = 20;
 
 		this.fftDatas = [];
 		this.paths = [];
 		for (let i = 0; i < this.numShapes; i++) {
-			const fftData = this.getRandomFftData(1024, 100, 0.2);
+			const fftData = this.getRandomFftData(1024, 40, 0.5);
 			this.fftDatas.push(fftData);
 			const path = getPoints(fftData);
 			this.paths.push(path);
@@ -47,7 +47,8 @@ export default class Controller {
 
 			context.translate(200, 0);
 
-			this.renderPath(context, path);
+			context.strokeStyle = 'white';
+			// this.renderPath(context, path);
 
 			const pt = this.sampleFftData(fftData, this.animAmt);
 			const grad = this.sampleFftDataGradient(fftData, this.animAmt);
@@ -59,7 +60,7 @@ export default class Controller {
 			context.translate(pt.x, pt.y);
 			context.rotate(angle);
 			context.beginPath();
-			context.fillStyle = 'black';
+			context.fillStyle = 'white';
 			context.moveTo(
 				triRadius, 0,
 			)
@@ -115,7 +116,7 @@ export default class Controller {
 			}
 			var datum = {
 				freq: i,
-				amplitude: random.real(0, maxAmp),
+				amplitude: maxAmp,//random.real(0, maxAmp),
 				phase: random.real(0, 2 * Math.PI),
 			}
 			fftData.push(datum);
