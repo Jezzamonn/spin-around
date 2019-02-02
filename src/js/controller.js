@@ -32,13 +32,18 @@ export default class Controller {
 	render(context) {
 		const numShapes = 10;
 		for (let i = 0; i < 10; i++) {
+			context.save();
 			context.rotate(2 * Math.PI * i / numShapes);
-			
+
+			context.translate(200, 0);
+
 			this.renderPath(context, this.path);
 
 			const pt = this.sampleFftData(this.fftData, this.animAmt);
 			const grad = this.sampleFftDataGradient(this.fftData, this.animAmt);
 			const angle = Math.atan2(grad.y, grad.x);
+
+			context.save
 	
 			const triRadius = 5;
 			context.translate(pt.x, pt.y);
@@ -56,6 +61,8 @@ export default class Controller {
 			)
 			context.closePath();
 			context.fill();
+
+			context.restore();
 		}
 	}
 
