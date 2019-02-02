@@ -8,14 +8,14 @@ export default class Controller {
 
 	constructor() {
 		this.animAmt = 0;
-		this.period = 100;
+		this.period = 5;
 
-		this.numShapes = 20;
+		this.numShapes = 50;
 
 		this.fftDatas = [];
 		this.paths = [];
 		for (let i = 0; i < this.numShapes; i++) {
-			const fftData = this.getRandomFftData(1024, 40, 0.5);
+			const fftData = this.getRandomFftData(1024, 100, 0.5);
 			this.fftDatas.push(fftData);
 			const path = getPoints(fftData);
 			this.paths.push(path);
@@ -45,10 +45,10 @@ export default class Controller {
 			context.save();
 			context.rotate(2 * Math.PI * i / this.numShapes);
 
-			context.translate(200, 0);
+			context.translate(150, 0);
 
-			context.strokeStyle = 'white';
-			// this.renderPath(context, path);
+			context.strokeStyle = 'black';
+			context.lineWidth = 0.2;
 
 			const startPoint = this.sampleFftData(fftData, 0);
 			const startGrad = this.sampleFftDataGradient(fftData, 0);
@@ -59,14 +59,16 @@ export default class Controller {
 
 			const triRadius = 5;
 
-			context.translate(-startPoint.x, -startPoint.y);
-			context.translate(point.x, point.y);
-
 			context.rotate(-Math.atan2(startGrad.y, startGrad.x));
+			context.rotate(Math.PI / 2);
+			context.translate(-startPoint.x, -startPoint.y);
+
+			// this.renderPath(context, path);
+			context.translate(point.x, point.y);
 			context.rotate(angle);
 
 			context.beginPath();
-			context.fillStyle = 'white';
+			context.fillStyle = 'black';
 			context.moveTo(
 				triRadius, 0,
 			)
@@ -114,9 +116,11 @@ export default class Controller {
 	}
 
 	getRandomFftData(numPoints, size, decay) {
+		const defaultSize = 1 / (1 - decay);
+
 		const fftData = [];
 		for (let i = -numPoints / 2; i < numPoints / 2; i ++) {
-			let maxAmp = size * Math.pow(-decay, Math.abs(i));
+			let maxAmp = (size / defaultSize) * Math.pow(-decay, Math.abs(i));
 			if (i == 0) {
 				maxAmp = 0;
 			}
