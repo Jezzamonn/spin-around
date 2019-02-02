@@ -10,8 +10,16 @@ export default class Controller {
 		this.animAmt = 0;
 		this.period = 10;
 
-		this.fftData = this.getRandomFftData(1024, 200, 0.4);
-		this.path = getPoints(this.fftData);
+		this.numShapes = 20;
+
+		this.fftDatas = [];
+		this.paths = [];
+		for (let i = 0; i < this.numShapes; i++) {
+			const fftData = this.getRandomFftData(1024, 200, 0.4);
+			this.fftDatas.push(fftData);
+			const path = getPoints(fftData);
+			this.paths.push(path);
+		}
 	}
 
 	/**
@@ -30,17 +38,19 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	render(context) {
-		const numShapes = 10;
-		for (let i = 0; i < 10; i++) {
+		for (let i = 0; i < this.numShapes; i++) {
+			const fftData = this.fftDatas[i];
+			const path = this.paths[i];
+
 			context.save();
-			context.rotate(2 * Math.PI * i / numShapes);
+			context.rotate(2 * Math.PI * i / this.numShapes);
 
 			context.translate(200, 0);
 
-			// this.renderPath(context, this.path);
+			this.renderPath(context, path);
 
-			const pt = this.sampleFftData(this.fftData, this.animAmt);
-			const grad = this.sampleFftDataGradient(this.fftData, this.animAmt);
+			const pt = this.sampleFftData(fftData, this.animAmt);
+			const grad = this.sampleFftDataGradient(fftData, this.animAmt);
 			const angle = Math.atan2(grad.y, grad.x);
 
 			context.save
