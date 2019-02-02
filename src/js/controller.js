@@ -10,7 +10,7 @@ export default class Controller {
 		this.animAmt = 0;
 		this.period = 10;
 
-		this.fftData = this.getRandomFftData(1024, 1000, 0.4);
+		this.fftData = this.getRandomFftData(1024, 200, 0.4);
 		this.path = getPoints(this.fftData);
 	}
 
@@ -30,28 +30,33 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	render(context) {
-		this.renderPath(context, this.path);
+		const numShapes = 10;
+		for (let i = 0; i < 10; i++) {
+			context.rotate(2 * Math.PI * i / numShapes);
+			
+			this.renderPath(context, this.path);
 
-		const pt = this.sampleFftData(this.fftData, this.animAmt);
-		const grad = this.sampleFftDataGradient(this.fftData, this.animAmt);
-		const angle = Math.atan2(grad.y, grad.x);
-
-		const triRadius = 5;
-		context.translate(pt.x, pt.y);
-		context.rotate(angle);
-		context.beginPath();
-		context.fillStyle = 'black';
-		context.moveTo(
-			triRadius, 0,
-		)
-		context.lineTo(
-			-triRadius, triRadius,
-		)
-		context.lineTo(
-			-triRadius, -triRadius,
-		)
-		context.closePath();
-		context.fill();
+			const pt = this.sampleFftData(this.fftData, this.animAmt);
+			const grad = this.sampleFftDataGradient(this.fftData, this.animAmt);
+			const angle = Math.atan2(grad.y, grad.x);
+	
+			const triRadius = 5;
+			context.translate(pt.x, pt.y);
+			context.rotate(angle);
+			context.beginPath();
+			context.fillStyle = 'black';
+			context.moveTo(
+				triRadius, 0,
+			)
+			context.lineTo(
+				-triRadius, triRadius,
+			)
+			context.lineTo(
+				-triRadius, -triRadius,
+			)
+			context.closePath();
+			context.fill();
+		}
 	}
 
 	sampleFftData(fftData, amt) {
