@@ -37,7 +37,7 @@ export default class Controller {
 
 			context.translate(200, 0);
 
-			this.renderPath(context, this.path);
+			// this.renderPath(context, this.path);
 
 			const pt = this.sampleFftData(this.fftData, this.animAmt);
 			const grad = this.sampleFftDataGradient(this.fftData, this.animAmt);
