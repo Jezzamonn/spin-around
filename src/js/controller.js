@@ -8,7 +8,7 @@ export default class Controller {
 
 	constructor() {
 		this.animAmt = 0;
-		this.period = 3;
+		this.period = 10;
 
 		this.fftData = this.getRandomFftData(1024, 1000, 0.4);
 		this.path = getPoints(this.fftData);
@@ -33,9 +33,24 @@ export default class Controller {
 		this.renderPath(context, this.path);
 
 		const pt = this.sampleFftData(this.fftData, this.animAmt);
+		const grad = this.sampleFftDataGradient(this.fftData, this.animAmt);
+		const angle = Math.atan2(grad.y, grad.x);
+
+		const triRadius = 5;
+		context.translate(pt.x, pt.y);
+		context.rotate(angle);
 		context.beginPath();
 		context.fillStyle = 'black';
-		context.arc(pt.x, pt.y, 10, 0, 2 * Math.PI);
+		context.moveTo(
+			triRadius, 0,
+		)
+		context.lineTo(
+			-triRadius, triRadius,
+		)
+		context.lineTo(
+			-triRadius, -triRadius,
+		)
+		context.closePath();
 		context.fill();
 	}
 
@@ -55,16 +70,17 @@ export default class Controller {
 	}
 
 	sampleFftDataGradient(fftData, amt) {
-		let x = 0;
-		let y = 0;
+		let dx = 0;
+		let dy = 0;
 		for (let fftDatum of fftData) {
+            const amplitude = fftDatum.amplitude;
             const angle = 2 * Math.PI * fftDatum.freq * amt + fftDatum.phase;
-            x += -Math.sin(angle);
-            y += Math.cos(angle);
+            dx += amplitude * fftDatum.freq * -Math.sin(angle);
+            dy += amplitude * fftDatum.freq * Math.cos(angle);
 		}
 		return {
-			x: x,
-			y: y,
+			x: dx,
+			y: dy,
 		};
 	}
 
