@@ -9,7 +9,7 @@ export default class Controller {
 
 	constructor() {
 		this.animAmt = 0;
-		this.period = 5;
+		this.period = 8;
 
 		this.numShapes = 50;
 
@@ -39,9 +39,11 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	render(context) {
-		const anim = easeInOut(this.animAmt, 1.5)
-
 		for (let i = 0; i < this.numShapes; i++) {
+			const shapeAmt = i / this.numShapes;
+			let localAnimAmt = (this.animAmt - shapeAmt + 1) % 1;
+			let anim = easeInOut(localAnimAmt, 2);
+
 			const fftData = this.fftDatas[i];
 			const path = this.paths[i];
 
