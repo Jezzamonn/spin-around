@@ -1,5 +1,6 @@
 import { getPoints } from "./fourier";
 import Random from 'random-js';
+import { easeInOut } from "./util";
 
 const engine = Random.engines.mt19937().seed(12345)
 const random = new Random(engine);
@@ -38,6 +39,8 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	render(context) {
+		const anim = easeInOut(this.animAmt, 1.5)
+
 		for (let i = 0; i < this.numShapes; i++) {
 			const fftData = this.fftDatas[i];
 			const path = this.paths[i];
@@ -51,10 +54,10 @@ export default class Controller {
 			context.lineWidth = 0.2;
 
 			const startPoint = this.sampleFftData(fftData, 0);
-			const startGrad = this.sampleFftDataGradient(fftData, 0);
+			const startGrad = this.sampleFftDataAccel(fftData, 0);
 
-			const point = this.sampleFftData(fftData, this.animAmt);
-			const grad = this.sampleFftDataGradient(fftData, this.animAmt);
+			const point = this.sampleFftData(fftData, anim);
+			const grad = this.sampleFftDataAccel(fftData, anim);
 			const angle = Math.atan2(grad.y, grad.x);
 
 			const triRadius = 5;
@@ -73,10 +76,10 @@ export default class Controller {
 				triRadius, 0,
 			)
 			context.lineTo(
-				-triRadius, triRadius,
+				-triRadius, 0.8 * triRadius,
 			)
 			context.lineTo(
-				-triRadius, -triRadius,
+				-triRadius, -0.8 *  triRadius,
 			)
 			context.closePath();
 			context.fill();
@@ -108,6 +111,21 @@ export default class Controller {
             const angle = 2 * Math.PI * fftDatum.freq * amt + fftDatum.phase;
             dx += amplitude * fftDatum.freq * -Math.sin(angle);
             dy += amplitude * fftDatum.freq * Math.cos(angle);
+		}
+		return {
+			x: dx,
+			y: dy,
+		};
+	}
+
+	sampleFftDataAccel(fftData, amt) {
+		let dx = 0;
+		let dy = 0;
+		for (let fftDatum of fftData) {
+            const amplitude = fftDatum.amplitude;
+            const angle = 2 * Math.PI * fftDatum.freq * amt + fftDatum.phase;
+            dx += amplitude * fftDatum.freq * fftDatum.freq * -Math.cos(angle);
+            dy += amplitude * fftDatum.freq * fftDatum.freq * -Math.sin(angle);
 		}
 		return {
 			x: dx,
