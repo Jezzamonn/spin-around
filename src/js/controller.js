@@ -11,7 +11,7 @@ export default class Controller {
 		this.animAmt = 0;
 		this.period = 8;
 
-		this.numShapes = 4000;
+		this.numShapes = 40000;
 
 		this.fftDatas = [];
 		this.paths = [];
@@ -63,7 +63,7 @@ export default class Controller {
 			const grad = this.sampleFftDataAccel(fftData, anim);
 			const angle = Math.atan2(grad.y, grad.x);
 
-			const triRadius = 2;
+			const triRadius = 1;
 
 			context.rotate(-Math.atan2(startGrad.y, startGrad.x));
 			context.rotate(Math.PI / 2);
