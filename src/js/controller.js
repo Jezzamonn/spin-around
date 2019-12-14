@@ -11,7 +11,7 @@ export default class Controller {
 		this.animAmt = 0;
 		this.period = 8;
 
-		this.numShapes = 50;
+		this.numShapes = 400;
 
 		this.fftDatas = [];
 		this.paths = [];
