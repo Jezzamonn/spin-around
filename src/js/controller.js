@@ -16,7 +16,7 @@ export default class Controller {
 		this.fftDatas = [];
 		this.paths = [];
 		for (let i = 0; i < this.numShapes; i++) {
-			const fftData = this.getRandomFftData(16, 100, 0.5);
+			const fftData = this.getRandomFftData(16, 50, 0.5);
 			this.fftDatas.push(fftData);
 			const path = getPoints(fftData);
 			this.paths.push(path);
