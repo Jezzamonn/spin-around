@@ -11,7 +11,7 @@ export default class Controller {
 		this.animAmt = 0;
 		this.period = 8;
 
-		this.numShapes = 400;
+		this.numShapes = 4000;
 
 		this.fftDatas = [];
 		this.paths = [];
@@ -39,6 +39,7 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	render(context) {
+		context.globalAlpha = 0.5;
 		for (let i = 0; i < this.numShapes; i++) {
 			const shapeAmt = i / this.numShapes;
 			let localAnimAmt = (this.animAmt - shapeAmt + 1) % 1;
@@ -62,7 +63,7 @@ export default class Controller {
 			const grad = this.sampleFftDataAccel(fftData, anim);
 			const angle = Math.atan2(grad.y, grad.x);
 
-			const triRadius = 3;
+			const triRadius = 2;
 
 			context.rotate(-Math.atan2(startGrad.y, startGrad.x));
 			context.rotate(Math.PI / 2);
