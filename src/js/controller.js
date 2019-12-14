@@ -62,7 +62,7 @@ export default class Controller {
 			const grad = this.sampleFftDataAccel(fftData, anim);
 			const angle = Math.atan2(grad.y, grad.x);
 
-			const triRadius = 5;
+			const triRadius = 3;
 
 			context.rotate(-Math.atan2(startGrad.y, startGrad.x));
 			context.rotate(Math.PI / 2);
